@@ -1,10 +1,15 @@
 package com.jean.flitter.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jean.flitter.dtos.requests.NewRoleRequest;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import java.util.UUID;
 import lombok.ToString;
 
@@ -27,6 +32,32 @@ public class Role {
    * The name of the role.
    */
   @Column(name = "user_role", nullable = false) private String userRole;
+
+  /**
+   * The list of users assigned to the role.
+   *
+   * This list is annotated with @OneToMany to indicate that there is a
+   * one-to-many relationship between roles and users. The mappedBy attribute is
+   * used to specify the field in the User class that maps to this list.
+   *
+   * The cascade attribute is set to CascadeType.ALL, which means that all
+   * changes made to the role will be cascaded to the users in this list. This
+   * includes updates, inserts, and deletes.
+   *
+   * The fetch attribute is set to FetchType.EAGER, which means that the list of
+   * users will be eagerly loaded from the database when the Role object is
+   * retrieved. This can improve performance by reducing the number of database
+   * queries needed to load the list of users.
+   *
+   * The @JsonManagedReference annotation is used to prevent infinite recursion
+   * when serializing the object to JSON. This is necessary because the User
+   * object has a reference back to the Role object, and without this
+   * annotation, the serialization process would enter an infinite loop.
+   */
+  @OneToMany(mappedBy = "role", cascade = CascadeType.ALL,
+             fetch = FetchType.EAGER)
+  @JsonManagedReference
+  private List<User> users;
 
   /**
    * Constructs an empty Role object.
