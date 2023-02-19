@@ -14,15 +14,38 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The UserController class handles HTTP requests related to user
+ * authentication.
+ */
 @RestController
 @RequestMapping("/auth")
 public class UserController {
+
+  /**
+   * The user service used to create users.
+   */
   private final UserService userService;
 
+  /**
+   * Constructs a UserController object with the given user service.
+   *
+   * @param userService the user service used to create users
+   */
   public UserController(UserService userService) {
     this.userService = userService;
   }
 
+  /**
+   * Handles a POST request to create a new user.
+   *
+   * @param req the request containing the username and password for the new
+   *     user
+   * @return a ResponseEntity with a message indicating the user was
+   *     successfully created
+   * @throws InvalidAuthException if the username or password in the request are
+   *     invalid or already exist
+   */
   @PostMapping("/register")
   public ResponseEntity<?> createUser(@RequestBody NewUserRequest req) {
     if (!userService.isValidUsername(req.getUsername()))
@@ -42,6 +65,13 @@ public class UserController {
     return ResponseEntity.ok("User successfully created");
   }
 
+  /**
+   * Handles an InvalidAuthException thrown by the createUser method and returns
+   * a ResponseEntity with an error message and timestamp.
+   *
+   * @param e the InvalidAuthException thrown by the createUser method
+   * @return a ResponseEntity with an error message and timestamp
+   */
   @ExceptionHandler(InvalidAuthException.class)
   public ResponseEntity<Object>
   handleInvalidAuthException(InvalidAuthException e) {
