@@ -72,6 +72,13 @@ public class UserController {
     return ResponseEntity.ok("User successfully created");
   }
 
+  /**
+   * Endpoint for user login.
+   *
+   * @param req The login request object containing the user's username and
+   *     password
+   * @return The principal object for the logged in user
+   */
   @PostMapping("/login")
   public ResponseEntity<Principal> loginUser(@RequestBody LoginRequest req) {
     Principal principal = userService.loginUser(req);
@@ -95,6 +102,15 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
   }
 
+  /**
+   * Exception handler for {@code UserNotFoundException}.
+   * Returns an HTTP response with a 401 status code and a message describing
+   * the error.
+   *
+   * @param e the {@code UserNotFoundException} to handle
+   * @return a {@code ResponseEntity} containing the error message and status
+   *     code
+   */
   @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<Object>
   handleUserNotFoundException(UserNotFoundException e) {

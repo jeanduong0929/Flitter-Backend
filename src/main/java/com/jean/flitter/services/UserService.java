@@ -74,6 +74,16 @@ public class UserService {
     throw new CannotCreateUserException("Cannot create user");
   }
 
+  /**
+   * Attempts to authenticate a user with the given login request and returns
+   * the corresponding Principal object. If the authentication fails, a
+   * UserNotFoundException is thrown.
+   *
+   * @param req the login request object containing the user's credentials
+   * @return the Principal object corresponding to the authenticated user
+   * @throws UserNotFoundException if no user can be found with the given
+   *     credentials
+   */
   public Principal loginUser(LoginRequest req) {
     Optional<Principal> Principal =
         userRepo.findAll()
