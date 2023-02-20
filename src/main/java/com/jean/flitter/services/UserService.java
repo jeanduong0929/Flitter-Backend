@@ -1,12 +1,17 @@
 package com.jean.flitter.services;
 
+import com.jean.flitter.dtos.requests.LoginRequest;
 import com.jean.flitter.dtos.requests.NewUserRequest;
+import com.jean.flitter.dtos.responses.Principal;
 import com.jean.flitter.entities.Role;
 import com.jean.flitter.entities.User;
 import com.jean.flitter.repositories.UserRepository;
 import com.jean.flitter.utils.custom_exceptions.CannotCreateUserException;
+import com.jean.flitter.utils.custom_exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -67,6 +72,33 @@ public class UserService {
       e.printStackTrace();
     }
     throw new CannotCreateUserException("Cannot create user");
+  }
+
+  public Principal loginUser(LoginRequest req) {
+    Optional<Principal> Principal =
+        userRepo.findAll()
+            .stream()
+            .filter((u) -> {
+              try {
+                byte[] salt = u.getSalt();
+                byte[] reqPassword =
+                    securityService.hashingMethod(req.getPassword(), salt);
+                if (u.getUsername().equals(req.getUsername()) &&
+                    Arrays.equals(u.getPassword(), reqPassword)) {
+                  return true;
+                }
+              } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+              }
+              return false;
+            })
+            .findFirst()
+            .map(Principal::new);
+
+    if (!Principal.isPresent())
+      throw new UserNotFoundException();
+
+    return Principal.get();
   }
 
   /**
