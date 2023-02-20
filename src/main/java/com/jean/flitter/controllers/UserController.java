@@ -1,8 +1,12 @@
 package com.jean.flitter.controllers;
 
+import com.jean.flitter.dtos.requests.LoginRequest;
 import com.jean.flitter.dtos.requests.NewUserRequest;
+import com.jean.flitter.dtos.responses.Principal;
+import com.jean.flitter.services.TokenService;
 import com.jean.flitter.services.UserService;
 import com.jean.flitter.utils.custom_exceptions.InvalidAuthException;
+import com.jean.flitter.utils.custom_exceptions.UserNotFoundException;
 import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,13 +31,16 @@ public class UserController {
    */
   private final UserService userService;
 
+  private final TokenService tokenService;
+
   /**
    * Constructs a UserController object with the given user service.
    *
    * @param userService the user service used to create users
    */
-  public UserController(UserService userService) {
+  public UserController(UserService userService, TokenService tokenService) {
     this.userService = userService;
+    this.tokenService = tokenService;
   }
 
   /**
@@ -65,6 +72,13 @@ public class UserController {
     return ResponseEntity.ok("User successfully created");
   }
 
+  @PostMapping("/login")
+  public ResponseEntity<Principal> loginUser(@RequestBody LoginRequest req) {
+    Principal principal = userService.loginUser(req);
+    principal.setToken(tokenService.generateToken(principal));
+    return ResponseEntity.status(HttpStatus.OK).body(principal);
+  }
+
   /**
    * Handles an InvalidAuthException thrown by the createUser method and returns
    * a ResponseEntity with an error message and timestamp.
@@ -79,5 +93,14 @@ public class UserController {
     body.put("Timestamp", LocalTime.now());
     body.put("Message", e.getMessage());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<Object>
+  handleUserNotFoundException(UserNotFoundException e) {
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("Timestamp", LocalTime.now());
+    body.put("Message", e.getMessage());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
   }
 }
