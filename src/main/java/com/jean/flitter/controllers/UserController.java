@@ -72,6 +72,14 @@ public class UserController {
     return ResponseEntity.ok("User successfully created");
   }
 
+  /**
+   * Handles a POST request to login a user.
+   *
+   * @param req the request containing the username and password for the user
+   * @return a ResponseEntity with the user's principal
+   * @throws UserNotFoundException if the username or password in the request
+   *     are invalid
+   */
   @PostMapping("/login")
   public ResponseEntity<Principal> loginUser(@RequestBody LoginRequest req) {
     Principal principal = userService.loginUser(req);
@@ -95,6 +103,13 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
   }
 
+  /**
+   * Handles a UserNotFoundException thrown by the loginUser method and returns
+   * a ResponseEntity with an error message and timestamp.
+   *
+   * @param e the UserNotFoundException thrown by the loginUser method
+   * @return a ResponseEntity with an error message and timestamp
+   */
   @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<Object>
   handleUserNotFoundException(UserNotFoundException e) {

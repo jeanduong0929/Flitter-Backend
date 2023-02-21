@@ -74,6 +74,15 @@ public class UserService {
     throw new CannotCreateUserException("Cannot create user");
   }
 
+  /**
+   * Authenticates a user with a given login request by checking the username
+   * and password against the credentials of all users in the user repository.
+   *
+   * @param req the login request containing the username and password
+   * @return a Principal object representing the authenticated user
+   * @throws UserNotFoundException if there is no user with the given username
+   *     and password
+   */
   public Principal loginUser(LoginRequest req) {
     Optional<Principal> Principal =
         userRepo.findAll()
@@ -96,7 +105,7 @@ public class UserService {
             .map(Principal::new);
 
     if (!Principal.isPresent())
-      throw new UserNotFoundException();
+      throw new UserNotFoundException("Invalid username or password");
 
     return Principal.get();
   }
