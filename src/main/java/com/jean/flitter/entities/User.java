@@ -2,12 +2,17 @@ package com.jean.flitter.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jean.flitter.dtos.requests.NewUserRequest;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.ToString;
 
@@ -42,6 +47,13 @@ public class User {
   @Column(name = "salt", nullable = false) private byte[] salt;
 
   /**
+   * The posts associated with the user.
+   */
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+             fetch = FetchType.EAGER)
+  private List<Post> posts;
+
+  /**
    * The role associated with the user.
    */
   @ManyToOne
@@ -61,6 +73,7 @@ public class User {
    *     user
    * @param password the hashed password for the new user
    * @param salt the salt used to hash the new user's password
+   * @param posts the posts associated with the new user
    * @param role the role associated with the new user
    */
   public User(NewUserRequest req, byte[] password, byte[] salt, Role role) {
@@ -81,11 +94,12 @@ public class User {
    * @param role the role associated with the user
    */
   public User(String id, String username, byte[] password, byte[] salt,
-              Role role) {
+              List<Post> posts, Role role) {
     this.id = id;
     this.username = username;
     this.password = password;
     this.salt = salt;
+    this.posts = posts;
     this.role = role;
   }
 
@@ -144,6 +158,25 @@ public class User {
    * @param salt the salt value to set
    */
   public void setSalt(byte[] salt) { this.salt = salt; }
+
+  /**
+   * Returns the posts associated with the user.
+   *
+   * @return the posts associated with the user
+   */
+  public List<Post> getPosts() {
+    if (posts == null) {
+      posts = new ArrayList<>();
+    }
+    return posts;
+  }
+
+  /**
+   * Sets the posts associated with the user.
+   *
+   * @param posts the posts to set
+   */
+  public void setPosts(List<Post> posts) { this.posts = posts; }
 
   /**
    * Returns the role associated with the user.

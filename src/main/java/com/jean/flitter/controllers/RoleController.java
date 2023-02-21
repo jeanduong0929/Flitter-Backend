@@ -37,7 +37,7 @@ public class RoleController {
    * @param req the request containing the name of the new role
    * @return a ResponseEntity containing the newly created role
    */
-  @PostMapping
+  @PostMapping("/create")
   public ResponseEntity<Role> createRole(@RequestBody NewRoleRequest req) {
     Role savedRole = roleService.createRole(req);
     return ResponseEntity.status(HttpStatus.CREATED).body(savedRole);

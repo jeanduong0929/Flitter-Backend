@@ -9,22 +9,32 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 
 /**
- * Service responsible for generating and validating JSON Web Tokens (JWTs).
+ * The TokenService class provides methods for generating and extracting
+ * authentication tokens.
  */
 @Service
 public class TokenService {
+  /**
+   * The JWT configuration used to generate and extract tokens.
+   */
   private final JwtConfig jwtConfig;
 
   /**
-   * Constructs a new TokenService object with the given JwtConfig object.
-   * @param jwtConfig the JWT configuration to use when generating tokens.
+   * Creates a new TokenService object with the given JWT configuration.
+   *
+   * @param jwtConfig the JWT configuration used to generate and extract tokens
    */
   public TokenService(JwtConfig jwtConfig) { this.jwtConfig = jwtConfig; }
 
   /**
-   * Generates a new JWT for the given subject (user).
-   * @param subject the user to generate a token for.
-   * @return the generated JWT as a String.
+   * Generates a new authentication token for the given subject.
+   *
+   * The token is generated using the JWT builder. The token is signed with
+   * the configured signing key and algorithm. The token is set to expire
+   * after the configured expiration time.
+   *
+   * @param subject the subject of the token
+   * @return the generated token
    */
   public String generateToken(Principal subject) {
     long now = System.currentTimeMillis();
@@ -41,10 +51,15 @@ public class TokenService {
   }
 
   /**
-   * Extracts the user details from the given JWT token.
-   * @param token the JWT token to extract the user details from.
-   * @return a Principal object containing the user details, or null if the
-   *     token is invalid.
+   * Extracts the subject of the given token.
+   *
+   * The token is parsed using the JWT parser. The token is verified using
+   * the configured signing key and algorithm. The token is then parsed
+   * into a claims object. The claims object is then used to create a new
+   * Principal object.
+   *
+   * @param token the token to extract the subject from
+   * @return the subject of the token
    */
   public Principal extractRequesterDetails(String token) {
     try {

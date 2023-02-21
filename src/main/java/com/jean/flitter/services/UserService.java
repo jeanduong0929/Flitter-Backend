@@ -75,14 +75,13 @@ public class UserService {
   }
 
   /**
-   * Attempts to authenticate a user with the given login request and returns
-   * the corresponding Principal object. If the authentication fails, a
-   * UserNotFoundException is thrown.
+   * Authenticates a user with a given login request by checking the username
+   * and password against the credentials of all users in the user repository.
    *
-   * @param req the login request object containing the user's credentials
-   * @return the Principal object corresponding to the authenticated user
-   * @throws UserNotFoundException if no user can be found with the given
-   *     credentials
+   * @param req the login request containing the username and password
+   * @return a Principal object representing the authenticated user
+   * @throws UserNotFoundException if there is no user with the given username
+   *     and password
    */
   public Principal loginUser(LoginRequest req) {
     Optional<Principal> Principal =
@@ -106,7 +105,7 @@ public class UserService {
             .map(Principal::new);
 
     if (!Principal.isPresent())
-      throw new UserNotFoundException();
+      throw new UserNotFoundException("Invalid username or password");
 
     return Principal.get();
   }

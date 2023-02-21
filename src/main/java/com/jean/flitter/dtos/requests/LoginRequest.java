@@ -3,29 +3,33 @@ package com.jean.flitter.dtos.requests;
 import lombok.ToString;
 
 /**
- * A request class for user login.
+ * The LoginRequest class represents a login request.
+ *
+ * This class contains the username and password of the user attempting to log
+ * in.
  */
 @ToString
 public class LoginRequest {
   /**
-   * The username of the user.
+   * The username of the user attempting to log in.
    */
   private String username;
+
   /**
-   * The password of the user.
+   * The password of the user attempting to log in.
    */
   private String password;
 
   /**
-   * Constructs an empty LoginRequest object.
+   * Creates a new LoginRequest object.
    */
   public LoginRequest() {}
 
   /**
-   * Constructs a LoginRequest object with the specified username and password.
+   * Creates a new LoginRequest object with the given username and password.
    *
-   * @param username the username of the user.
-   * @param password the password of the user.
+   * @param username The username of the user attempting to log in.
+   * @param password The password of the user attempting to log in.
    */
   public LoginRequest(String username, String password) {
     this.username = username;
@@ -33,30 +37,30 @@ public class LoginRequest {
   }
 
   /**
-   * Returns the username of the user.
+   * Returns the username of the user attempting to log in.
    *
-   * @return the username of the user.
+   * @return The username of the user attempting to log in.
    */
   public String getUsername() { return username; }
 
   /**
-   * Sets the username of the user.
+   * Sets the username of the user attempting to log in.
    *
-   * @param username the username of the user.
+   * @param username The username of the user attempting to log in.
    */
   public void setUsername(String username) { this.username = username; }
 
   /**
-   * Returns the password of the user.
+   * Returns the password of the user attempting to log in.
    *
-   * @return the password of the user.
+   * @return The password of the user attempting to log in.
    */
   public String getPassword() { return password; }
 
   /**
-   * Sets the password of the user.
+   * Sets the password of the user attempting to log in.
    *
-   * @param password the password of the user.
+   * @param password The password of the user attempting to log in.
    */
   public void setPassword(String password) { this.password = password; }
 }
