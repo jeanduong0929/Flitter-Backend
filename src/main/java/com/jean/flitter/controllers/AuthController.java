@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
  * The UserController class handles HTTP requests related to user
  * authentication.
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/auth")
-public class UserController {
+public class AuthController {
 
   /**
    * The user service used to create users.
@@ -38,7 +40,7 @@ public class UserController {
    *
    * @param userService the user service used to create users
    */
-  public UserController(UserService userService, TokenService tokenService) {
+  public AuthController(UserService userService, TokenService tokenService) {
     this.userService = userService;
     this.tokenService = tokenService;
   }
