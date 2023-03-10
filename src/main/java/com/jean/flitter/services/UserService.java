@@ -11,6 +11,7 @@ import com.jean.flitter.utils.custom_exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -109,6 +110,13 @@ public class UserService {
 
     return Principal.get();
   }
+
+  /**
+   * Gets all usernames from the user repository.
+   *
+   * @return a list of all usernames
+   */
+  public List<String> getAllUsernames() { return userRepo.getAllUsernames(); }
 
   /**
    * Validates that the given username is between 8 and 20 characters long and
